@@ -133,3 +133,8 @@ variance_interval_2 <- confidence_variance(alpha_2)
 alpha_3 <- 0.0026
 mean_interval_3 <- confidence_mean(alpha_3)
 variance_interval_3 <- confidence_variance(alpha_3)
+
+############## Подзадача 9 ##############
+# Статистические оценки парметров асимметрии и эксцесса
+B_N <- mean((Y - emperical_mean)^3) / emperical_variance^(3 / 2)
+E_N <- mean((Y - emperical_mean)^4) / emperical_variance^2 - 3
