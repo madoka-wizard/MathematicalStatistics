@@ -25,8 +25,8 @@ sq_optimizer <- function(x_1, x_2, x_3, x_4, y) {
 
 ############## Подзадача 2 ##############
 # Остаточная дисперсия
-rss <- sq_optimizer(x_1, x_2, x_3, x_4, Y)
-vr <- rss / (N - 5)
+RSS <- sq_optimizer(x_1, x_2, x_3, x_4, Y)  # Остаточная сумма квадратов
+sigma_sq <- RSS / (N - 5)                   # Остаточная дисперсия
 
 ############## Подзадача 3 ##############
 make_model <- function(x) {
@@ -42,9 +42,9 @@ q <- 1 - p
 
 compute_intervals <- function(i) {
   return(c(theta[i] - qt(p = 1 - q / 2, df = N - 5) *
-    vr *
+    sigma_sq *
     sqrt(solve(B)[i, i]), theta[i] + qt(p = 1 - q / 2, df = N - 5) *
-    vr *
+    sigma_sq *
     sqrt(solve(B)[i, i])))
 }
 
@@ -53,18 +53,18 @@ for (i in 1:5) {
 }
 
 intervals_sigma <- function() {
-  return(c(rss / qchisq(p = 1 - q / 2, df = N - 5),
-           rss / qchisq(p = q / 2, df = N - 5)))
+  return(c(RSS / qchisq(p = 1 - q / 2, df = N - 5),
+           RSS / qchisq(p = q / 2, df = N - 5)))
 }
 
 intervals_sigma()
 
 intervals_estimate <- function() {
   return(c(ex %*% theta - qt(p = 1 - q / 2, df = N - 5) *
-    vr *
+    sigma_sq *
     sqrt(ex %*% solve(B) %*% t(t(ex))),
            ex %*% theta + qt(p = 1 - q / 2, df = N - 5) *
-             vr *
+             sigma_sq *
              sqrt(ex %*% solve(B) %*% t(t(ex)))))
 }
 
@@ -72,7 +72,7 @@ intervals_estimate()
 
 ############## Подзадача 5 ##############
 compute_importance <- function(i) {
-  return(abs(theta[i] / (vr * sqrt(solve(B)[i, i]))) <= qt(p = 1 - q / 2, df = N - 5))
+  return(abs(theta[i] / (sigma_sq * sqrt(solve(B)[i, i]))) <= qt(p = 1 - q / 2, df = N - 5))
 }
 
 for (i in 1:5) {
@@ -82,4 +82,4 @@ for (i in 1:5) {
 ############## Подзадача 6 ##############
 # Вычисляем коэффициент детерминации
 Y_mean <- mean(Y)
-d <- 1 - vr / (sum((Y - Y_mean)^2))
+d <- 1 - sigma_sq / (sum((Y - Y_mean)^2))
