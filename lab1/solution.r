@@ -69,3 +69,14 @@ F_1_samples <- rPareto(N, a, x_0)
 F_2_samples <- runif(N, l, r)
 for (i in 1:N)
   Y[i] <- switch(X[i], F_1_samples[i], F_2_samples[i])
+
+############## Подзадача 5 ##############
+# Построить графики F и эмпирической функции распределения F_n
+F_n <- ecdf(Y)
+
+from <- as.integer(min(Y))
+to <- as.integer(max(Y))
+t <- seq(from, to, by = 0.1)
+
+plot(t, F(t), main = "F - зеленый, F_n - синий", ylab = "", xlab = "x", type = 'l', col = "green")
+lines(t, F_n(t), type = 'l', col = "blue")
