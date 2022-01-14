@@ -80,3 +80,24 @@ t <- seq(from, to, by = 0.1)
 
 plot(t, F(t), main = "F - зеленый, F_n - синий", ylab = "", xlab = "x", type = 'l', col = "green")
 lines(t, F_n(t), type = 'l', col = "blue")
+
+############## Подзадача 6 ##############
+# Построить график плотности распределения и гистограмму относительных частот
+m <- round(1.72 * N^(1 / 3))
+counter <- numeric(m)
+frequences <- numeric(m + 1)
+h <- (to - from) / m
+limits <- seq(from, to, by = h)
+Y <- sort(Y)
+
+for (i in 2:m - 1) {
+  j <- counter[i] + 1
+  while (j <= N & Y[j] < limits[i])
+    j <- j + 1
+  counter[i] <- j - 1
+  frequences[i - 1] <- counter[i] - counter[i - 1]
+}
+
+frequences <- frequences / (N * h)
+hist(Y, freq = FALSE, breaks = m, main = "Гистограмма и плотность", ylab = "", xlab = "x", col = "blue")
+lines(x, f(x), type = 'l', col = "green")
