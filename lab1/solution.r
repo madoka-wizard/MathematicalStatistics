@@ -106,3 +106,30 @@ lines(x, f(x), type = 'l', col = "green")
 # Вычислить значения оценок мат. ожидания и дисперсии по полученной выборке
 emperical_mean <- mean(Y)
 emperical_variance <- var(Y)
+
+############## Подзадача 8 ##############
+# Построить асимптотические доверительные интервалы для "неизвестных" мат. ожидания и дисперсии
+confidence_mean <- function(alpha) {
+  l <- emperical_mean - qnorm(1 - alpha / 2) * sqrt(emperical_variance / N)
+  r <- emperical_mean + qnorm(1 - alpha / 2) * sqrt(emperical_variance / N)
+  return(c(l, r))
+}
+
+confidence_variance <- function(alpha) {
+  M_4 <- sum((Y - emperical_mean)^4) / N
+  l <- emperical_variance - qnorm(1 - alpha / 2) * sqrt(M_4 - emperical_variance^2) / sqrt(N)
+  r <- emperical_variance + qnorm(1 - alpha / 2) * sqrt(M_4 - emperical_variance^2) / sqrt(N)
+  return(c(l, r))
+}
+
+alpha_1 <- 0.1
+mean_interval_1 <- confidence_mean(alpha_1)
+variance_interval_1 <- confidence_variance(alpha_1)
+
+alpha_2 <- 0.05
+mean_interval_2 <- confidence_mean(alpha_2)
+variance_interval_2 <- confidence_variance(alpha_2)
+
+alpha_3 <- 0.0026
+mean_interval_3 <- confidence_mean(alpha_3)
+variance_interval_3 <- confidence_variance(alpha_3)
