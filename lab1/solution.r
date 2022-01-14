@@ -90,7 +90,7 @@ h <- (to - from) / m
 limits <- seq(from, to, by = h)
 Y <- sort(Y)
 
-for (i in 2:m - 1) {
+for (i in 2:(m - 1)) {
   j <- counter[i] + 1
   while (j <= N & Y[j] < limits[i])
     j <- j + 1
@@ -100,7 +100,7 @@ for (i in 2:m - 1) {
 
 frequences <- frequences / (N * h)
 hist(Y, freq = FALSE, breaks = m, main = "Гистограмма и плотность", ylab = "", xlab = "x", col = "blue")
-lines(x, f(x), type = 'l', col = "green")
+lines(t, f(t), type = 'l', col = "green")
 
 ############## Подзадача 7 ##############
 # Вычислить значения оценок мат. ожидания и дисперсии по полученной выборке
@@ -110,16 +110,14 @@ emperical_variance <- var(Y)
 ############## Подзадача 8 ##############
 # Построить асимптотические доверительные интервалы для "неизвестных" мат. ожидания и дисперсии
 confidence_mean <- function(alpha) {
-  l <- emperical_mean - qnorm(1 - alpha / 2) * sqrt(emperical_variance / N)
-  r <- emperical_mean + qnorm(1 - alpha / 2) * sqrt(emperical_variance / N)
-  return(c(l, r))
+  return(c(emperical_mean - qnorm(1 - alpha / 2) * sqrt(emperical_variance / N),
+           emperical_mean + qnorm(1 - alpha / 2) * sqrt(emperical_variance / N)))
 }
 
 confidence_variance <- function(alpha) {
   M_4 <- sum((Y - emperical_mean)^4) / N
-  l <- emperical_variance - qnorm(1 - alpha / 2) * sqrt(M_4 - emperical_variance^2) / sqrt(N)
-  r <- emperical_variance + qnorm(1 - alpha / 2) * sqrt(M_4 - emperical_variance^2) / sqrt(N)
-  return(c(l, r))
+  return(c(emperical_variance - qnorm(1 - alpha / 2) * sqrt(M_4 - emperical_variance^2) / sqrt(N),
+           emperical_variance + qnorm(1 - alpha / 2) * sqrt(M_4 - emperical_variance^2) / sqrt(N)))
 }
 
 alpha_1 <- 0.1
