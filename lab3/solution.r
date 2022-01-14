@@ -15,10 +15,54 @@ X <- matrix(c(x_0, x_1, x_2, x_3, x_4), N, 5)
 B <- t(X) %*% X
 theta <- solve(B) %*% t(X) %*% Y
 
-sq <- function(x_1, x_2, x_3, x_4, y) {
+sq_optimizer <- function(x_1, x_2, x_3, x_4, y) {
   return(sum((y - (theta[1] +
     x_1 * theta[2] +
     x_2 * theta[3] +
     x_3 * theta[4] +
     x_4 * theta[5]))^2))
 }
+
+############## Подзадача 2 ##############
+# Остаточная дисперсия
+rss <- sq_optimizer(x_1, x_2, x_3, x_4, Y)
+vr <- rss / (N - 5)
+
+############## Подзадача 3 ##############
+make_model <- function(x) {
+  return(x %*% theta)
+}
+
+make_model(c(1, 1, 181, 169, 69))
+
+############## Подзадача 4 ##############
+# Ищем доверительные интервалы
+compute_intervals <- function(i) {
+  return(c(theta[i] - qt(p = 1 - 0.05 / 2, df = N - 5) *
+    vr *
+    sqrt(solve(B)[i, i]), theta[i] + qt(p = 1 - 0.05 / 2, df = N - 5) *
+    vr *
+    sqrt(solve(B)[i, i])))
+}
+
+for (i in 1:5) {
+  compute_intervals(i)
+}
+
+intervals_sigma <- function() {
+  return(c(rss / qchisq(p = 1 - 0.05 / 2, df = N - 5),
+           rss / qchisq(p = 0.05 / 2, df = N - 5)))
+}
+
+intervals_sigma()
+
+intervals_estimate <- function() {
+  return(c(ex %*% theta - qt(p = 1 - 0.05 / 2, df = N - 5) *
+    vr *
+    sqrt(ex %*% solve(B) %*% t(t(ex))),
+           ex %*% theta + qt(p = 1 - 0.05 / 2, df = N - 5) *
+             vr *
+             sqrt(ex %*% solve(B) %*% t(t(ex)))))
+}
+
+intervals_estimate()
