@@ -37,10 +37,13 @@ make_model(c(1, 1, 181, 169, 69))
 
 ############## Подзадача 4 ##############
 # Ищем доверительные интервалы
+p <- 0.95
+q <- 1 - p
+
 compute_intervals <- function(i) {
-  return(c(theta[i] - qt(p = 1 - 0.05 / 2, df = N - 5) *
+  return(c(theta[i] - qt(p = 1 - q / 2, df = N - 5) *
     vr *
-    sqrt(solve(B)[i, i]), theta[i] + qt(p = 1 - 0.05 / 2, df = N - 5) *
+    sqrt(solve(B)[i, i]), theta[i] + qt(p = 1 - q / 2, df = N - 5) *
     vr *
     sqrt(solve(B)[i, i])))
 }
@@ -50,19 +53,33 @@ for (i in 1:5) {
 }
 
 intervals_sigma <- function() {
-  return(c(rss / qchisq(p = 1 - 0.05 / 2, df = N - 5),
-           rss / qchisq(p = 0.05 / 2, df = N - 5)))
+  return(c(rss / qchisq(p = 1 - q / 2, df = N - 5),
+           rss / qchisq(p = q / 2, df = N - 5)))
 }
 
 intervals_sigma()
 
 intervals_estimate <- function() {
-  return(c(ex %*% theta - qt(p = 1 - 0.05 / 2, df = N - 5) *
+  return(c(ex %*% theta - qt(p = 1 - q / 2, df = N - 5) *
     vr *
     sqrt(ex %*% solve(B) %*% t(t(ex))),
-           ex %*% theta + qt(p = 1 - 0.05 / 2, df = N - 5) *
+           ex %*% theta + qt(p = 1 - q / 2, df = N - 5) *
              vr *
              sqrt(ex %*% solve(B) %*% t(t(ex)))))
 }
 
 intervals_estimate()
+
+############## Подзадача 5 ##############
+compute_importance <- function(i) {
+  return(abs(theta[i] / (vr * sqrt(solve(B)[i, i]))) <= qt(p = 1 - q / 2, df = N - 5))
+}
+
+for (i in 1:5) {
+  compute_importance(i)
+}
+
+############## Подзадача 6 ##############
+# Вычисляем коэффициент детерминации
+Y_mean <- mean(Y)
+d <- 1 - vr / (sum((Y - Y_mean)^2))
