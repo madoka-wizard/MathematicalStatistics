@@ -101,3 +101,8 @@ for (i in 2:m - 1) {
 frequences <- frequences / (N * h)
 hist(Y, freq = FALSE, breaks = m, main = "Гистограмма и плотность", ylab = "", xlab = "x", col = "blue")
 lines(x, f(x), type = 'l', col = "green")
+
+############## Подзадача 7 ##############
+# Вычислить значения оценок мат. ожидания и дисперсии по полученной выборке
+emperical_mean <- mean(Y)
+emperical_variance <- var(Y)
